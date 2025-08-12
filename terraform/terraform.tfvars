@@ -1,0 +1,5 @@
+environment   = "dev"
+project       = "data-lake"
+instance_type = "t2.micro"
+bucket_name   = "buku"
+aws_region    = "ap-southeast-2"
