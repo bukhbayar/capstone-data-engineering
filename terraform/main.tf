@@ -17,8 +17,11 @@ provider "aws" {
 #   project         = var.project
 #   environment     = var.environment
 #   instance_type   = var.instance_type
-#   subnet_id       = module.network.public_subnet_ids[0] # "subnet-0b03f4786e476b378"
-#   vpc_id          = module.network.vpc_id # "vpc-0050952f5c44ed5fe"
+#   subnet_id       = "subnet-0b03f4786e476b378"
+#   vpc_id          = "vpc-0050952f5c44ed5fe"
+#   airflow_logs_bucket = module.data_bucket.bucket_name
+#   airflow_admin_user = var.airflow_admin_user
+#   airflow_admin_pass = var.airflow_admin_pass
 # }
 
 module "data_bucket" {

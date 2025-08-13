@@ -25,3 +25,13 @@ variable aws_region {
   type        = string
   description = "AWS region to deploy resources"
 }
+
+variable airflow_admin_user {
+  description = "The Airflow admin user name"
+  type        = string
+}
+
+variable airflow_admin_pass {
+  description = "The Airflow admin user password"
+  type        = string
+}
