@@ -22,6 +22,7 @@ provider "aws" {
 #   airflow_logs_bucket = module.data_bucket.bucket_name
 #   airflow_admin_user = var.airflow_admin_user
 #   airflow_admin_pass = var.airflow_admin_pass
+
 # }
 
 module "data_bucket" {
