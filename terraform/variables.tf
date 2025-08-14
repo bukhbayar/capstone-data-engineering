@@ -35,3 +35,20 @@ variable airflow_admin_pass {
   description = "The Airflow admin user password"
   type        = string
 }
+
+variable dbt_container_image {
+  description = "The Docker image for the dbt container"
+  type        = string
+}
+
+variable dbt_vcpu {
+  description = "The number of vCPUs for the dbt container"
+  type        = number
+  default     = 2
+}
+
+variable dbt_memory {
+  description = "The amount of memory (in MiB) for the dbt container"
+  type        = number
+  default     = 4096
+}

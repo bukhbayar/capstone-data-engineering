@@ -32,6 +32,18 @@ module "data_bucket" {
   bucket_name = var.bucket_name
 }
 
+module "batch" {
+  source                 = "./modules/batch"
+  project                = var.project
+  environment            = var.environment
+  vpc_id                 = "vpc-0050952f5c44ed5fe"
+  private_subnet_ids     = ["subnet-0b03f4786e476b378", "subnet-06736963490685074","subnet-092b7a7588460e249"]
+  dbt_container_image    = var.dbt_container_image
+  dbt_vcpu               = var.dbt_vcpu
+  dbt_memory             = var.dbt_memory
+  aws_region             = var.aws_region
+}
+
 # module "network" {
 #   source      = "./modules/vpc"
 #   project     = var.project
