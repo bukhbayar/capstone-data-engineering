@@ -53,25 +53,25 @@ resource "aws_route_table_association" "public" {
 }
 
 # NAT Gateway for private subnet
-resource "aws_eip" "nat" {
-  domain = "vpc"
-  tags   = {
-    Name = "${local.name}-nat-eip"
-  }
-}
+# resource "aws_eip" "nat" {
+#   domain = "vpc"
+#   tags   = {
+#     Name = "${local.name}-nat-eip"
+#   }
+# }
 
-resource "aws_nat_gateway" "this" {
-  allocation_id = aws_eip.nat.id
-  subnet_id     = aws_subnet.public.id
-  tags = { Name = "${local.name}-nat" }
-}
+# resource "aws_nat_gateway" "this" {
+#   allocation_id = aws_eip.nat.id
+#   subnet_id     = aws_subnet.public.id
+#   tags = { Name = "${local.name}-nat" }
+# }
 
 resource "aws_route_table" "private" {
   vpc_id = aws_vpc.this.id
-  route  {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.this.id
-  }
+  # route  {
+    # cidr_block = "0.0.0.0/0"
+    # nat_gateway_id = aws_nat_gateway.this.id
+  # }
   tags = { Name = "${local.name}-rtb-private" }
 }
 

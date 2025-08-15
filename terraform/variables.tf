@@ -52,3 +52,18 @@ variable dbt_memory {
   type        = number
   default     = 4096
 }
+
+variable db_name {
+  description = "The name of the database to create"
+  type        = string
+}
+
+variable db_user {
+  description = "The database user name"
+  type        = string
+}
+
+variable db_password {
+  description = "The password for the database user"
+  type        = string
+}

@@ -27,14 +27,27 @@ variable vpc_id {
 variable airflow_logs_bucket {
   description = "The S3 bucket for Airflow logs"
   type        = string
+  default     = ""
 }
 
 variable airflow_admin_user {
   description = "The Airflow admin user name"
   type        = string
+  default     = ""
 }
 
 variable airflow_admin_pass {
   description = "The Airflow admin user password"
+  type        = string
+  default     = ""
+}
+
+variable security_group_ids {
+  description = "Additional security group IDs to associate with the instance"
+  type        = list(string)
+}
+
+variable user_data {
+  description = "User data script to run on instance launch"
   type        = string
 }
