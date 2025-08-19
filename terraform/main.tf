@@ -115,11 +115,18 @@ provider "aws" {
 
 # }
 
+module "code_bucket" {
+  source      = "./modules/s3_bucket"
+  project     = var.project
+  environment = var.environment
+  bucket_name = "code-${var.environment}-buku"
+}
+
 module "data_bucket" {
   source      = "./modules/s3_bucket"
   project     = var.project
   environment = var.environment
-  bucket_name = var.bucket_name
+  bucket_name = "${var.project}-${var.environment}-buku"
 }
 
 module "batch" {

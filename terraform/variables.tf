@@ -67,3 +67,13 @@ variable db_password {
   description = "The password for the database user"
   type        = string
 }
+
+variable "csv_objects" {
+  type = map(string)
+  description = "e.g., { 'customer.csv' = '/abs/path/customer.csv', ... }"
+}
+
+variable "python_objects" {
+  type = map(string)
+  description = "e.g., { 'customer.csv' = '/abs/path/customer.csv', ... }"
+}
