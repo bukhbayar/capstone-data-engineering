@@ -93,8 +93,7 @@ provider "aws" {
 #     AIRFLOW__CORE__LOAD_EXAMPLES=False
 #     AIRFLOW__CORE__FERNET_KEY=$${FERNET_KEY}
 #     AIRFLOW__WEBSERVER__SECRET_KEY=$${FERNET_KEY}
-#     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@3.25.115.171:5432/airflow_db
-#     AIRFLOW__CELERY__RESULT_BACKEND=postgresql+psycopg2://airflow:airflow@3.25.115.171:5432/airflow_db
+#     AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@52.63.26.0:5432/airflow_db
 #     ENV
 #     chmod 0640 /etc/airflow/airflow.env
 #     chgrp airflow /etc/airflow/airflow.env
