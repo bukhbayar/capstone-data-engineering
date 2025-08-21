@@ -12,43 +12,43 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 
-# module "ec2-datatabase" {
-#   source          = "./modules/ec2_instance"
-#   project         = var.project
-#   environment     = var.environment
-#   instance_type   = var.instance_type
-#   role_name       = "ec2-database"
-#   subnet_id       = module.network.public_subnet_ids[0]
-#   vpc_id          = module.network.vpc_id
-#   security_group_ids = [aws_security_group.sg_postgres.id, aws_security_group.sg.id]
-#   airflow_logs_bucket = ""
-#   airflow_admin_user = ""
-#   airflow_admin_pass = ""
-#   user_data = <<-EOF
-#     #!/usr/bin/env bash
-#     set -euxo pipefail
+module "ec2-datatabase" {
+  source          = "./modules/ec2_instance"
+  project         = var.project
+  environment     = var.environment
+  instance_type   = var.instance_type
+  role_name       = "ec2-database"
+  subnet_id       = module.network.public_subnet_ids[0]
+  vpc_id          = module.network.vpc_id
+  security_group_ids = [aws_security_group.sg_postgres.id, aws_security_group.sg.id]
+  airflow_logs_bucket = ""
+  airflow_admin_user = ""
+  airflow_admin_pass = ""
+  user_data = <<-EOF
+    #!/usr/bin/env bash
+    set -euxo pipefail
 
-#     dnf -y update
-#     dnf -y install postgresql15 postgresql15-server
+    dnf -y update
+    dnf -y install postgresql15 postgresql15-server
 
-#     # Initialize data directory
-#     /usr/bin/postgresql-setup --initdb
+    # Initialize data directory
+    /usr/bin/postgresql-setup --initdb
 
-#     # Listen on all interfaces
-#     sed -i "s/^#listen_addresses = .*/listen_addresses = '*'/g" /var/lib/pgsql/data/postgresql.conf
+    # Listen on all interfaces
+    sed -i "s/^#listen_addresses = .*/listen_addresses = '*'/g" /var/lib/pgsql/data/postgresql.conf
 
-#     # Allow connections from anywhere (not recommended for production)
-#     echo "host    all             all              0.0.0.0/0              scram-sha-256" >> /var/lib/pgsql/data/pg_hba.conf
+    # Allow connections from anywhere (not recommended for production)
+    echo "host    all             all              0.0.0.0/0              scram-sha-256" >> /var/lib/pgsql/data/pg_hba.conf
 
-#     # Start & enable service
-#     systemctl enable --now postgresql
+    # Start & enable service
+    systemctl enable --now postgresql
 
-#     # Create DB and user (practice only; use Secrets Manager & parameterized scripts in prod)
-#     sudo -u postgres psql -v ON_ERROR_STOP=1 -d postgres <<'SQL'
-#     ${local.db_bootstrap_sql}
-#     SQL
-#   EOF
-# }
+    # Create DB and user (practice only; use Secrets Manager & parameterized scripts in prod)
+    sudo -u postgres psql -v ON_ERROR_STOP=1 -d postgres <<'SQL'
+    ${local.db_bootstrap_sql}
+    SQL
+  EOF
+}
 
 # module "ec2-airflow" {
 #   source          = "./modules/ec2_instance"
