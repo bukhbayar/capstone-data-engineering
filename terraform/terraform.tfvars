@@ -6,9 +6,7 @@ aws_region    = "ap-southeast-2"
 airflow_admin_user = "buku"
 airflow_admin_pass = "buku123123"
 dbt_container_image = "croixbleueqc/dbt:latest"
-db_name       = "airflow"
-db_user       = "airflow"
-db_password   = "airflow"
+
 csv_objects = {
   "customers/customers.csv" = "../datasets/customers.csv",
   "accounts/accounts.csv" = "../datasets/accounts.csv",
@@ -18,3 +16,8 @@ csv_objects = {
 python_objects = {
   "dags/extract.py" = "../scripts/extract.py",
 }
+databases = [
+    { name = "airflow_db",   user = "airflow",   password = "airflow" },
+    { name = "bootcamp_db",  user = "bootcamp_user", password = "bootcamp_password" },
+    { name = "metabase_db",  user = "metabase_user", password = "metabase_password" }
+]

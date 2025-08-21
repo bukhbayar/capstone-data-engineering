@@ -53,21 +53,6 @@ variable dbt_memory {
   default     = 4096
 }
 
-variable db_name {
-  description = "The name of the database to create"
-  type        = string
-}
-
-variable db_user {
-  description = "The database user name"
-  type        = string
-}
-
-variable db_password {
-  description = "The password for the database user"
-  type        = string
-}
-
 variable "csv_objects" {
   type = map(string)
   description = "e.g., { 'customer.csv' = '/abs/path/customer.csv', ... }"
@@ -76,4 +61,14 @@ variable "csv_objects" {
 variable "python_objects" {
   type = map(string)
   description = "e.g., { 'customer.csv' = '/abs/path/customer.csv', ... }"
+}
+
+variable "databases" {
+  description = "List of DBs to create with owners/passwords"
+  type = list(object({
+    name     : string
+    user     : string
+    password : string
+  }))
+  default = []
 }
