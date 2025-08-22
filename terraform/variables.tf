@@ -77,3 +77,8 @@ variable "create_database" {
   description = "Flag to create a database"
   type        = bool
 }
+
+variable "create_airflow" {
+  description = "Flag to create a airflow"
+  type        = bool
+}
