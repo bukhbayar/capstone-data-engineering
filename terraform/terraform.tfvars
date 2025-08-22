@@ -22,6 +22,6 @@ databases = [
     { name = "metabase_db",  user = "metabase_user", password = "metabase_password" }
 ]
 ip_addresses = [
-    "10.20.11.1",
-    "10.20.11.2"
+    "10.20.1.1",
+    "10.20.1.2"
 ]
