@@ -9,6 +9,8 @@ resource "aws_instance" "this" {
   key_name                    = "demo-key"
   user_data                   = local.user_data
 
+  private_ip                  = var.private_ip
+
   tags = {
     Name        = var.role_name
     Project     = var.project

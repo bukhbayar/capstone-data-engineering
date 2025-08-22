@@ -29,6 +29,9 @@ module "ec2-datatabase" {
   airflow_logs_bucket = ""
   airflow_admin_user = ""
   airflow_admin_pass = ""
+
+  private_ip      = var.ip_addresses[0]
+
   user_data = <<-EOF
     #!/usr/bin/env bash
     set -euxo pipefail
@@ -68,6 +71,9 @@ module "ec2-airflow" {
   airflow_logs_bucket = module.data_bucket.bucket_name
   airflow_admin_user = var.airflow_admin_user
   airflow_admin_pass = var.airflow_admin_pass
+
+  private_ip      = var.ip_addresses[1]
+
   user_data = <<-EOF
     #!/usr/bin/env bash
     set -euxo pipefail
@@ -120,8 +126,8 @@ module "ec2-airflow" {
     AIRFLOW__CORE__DAGS_ARE_PAUSED_AT_CREATION=True
     AIRFLOW__SCHEDULER__ENABLE_HEALTH_CHECK=True
     AIRFLOW__API__AUTH_BACKENDS=airflow.api.auth.backend.basic_auth,airflow.api.auth.backend.session
-    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@54.252.195.45:5432/airflow_db
-    AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@54.252.195.45:5432/airflow_db
+    AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@${var.ip_addresses[0]}:5432/airflow_db
+    AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:airflow@${var.ip_addresses[0]}:5432/airflow_db
     AIRFLOW__CELERY__BROKER_URL=redis://localhost:6379/0
 
     ENV
