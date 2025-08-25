@@ -27,10 +27,15 @@ resource "aws_iam_role_policy" "s3_logs_rw" {
     Version="2012-10-17",
     Statement=[{
       Effect="Allow",
-      Action=["s3:*"],
+      Action=[
+        "s3:*",
+        "s3:ListBucket"
+        ],
       Resource=[
         "arn:aws:s3:::${var.airflow_logs_bucket}",
-        "arn:aws:s3:::${var.airflow_logs_bucket}/*"
+        "arn:aws:s3:::${var.airflow_logs_bucket}/*",
+        "arn:aws:s3:::${var.airflow_dags_bucket}",
+        "arn:aws:s3:::${var.airflow_dags_bucket}/*"
       ]
     }]
   })
