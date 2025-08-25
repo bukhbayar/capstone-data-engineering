@@ -136,19 +136,21 @@ module "ec2-airflow" {
     chgrp airflow /etc/airflow/airflow.env
 
     # Initialize the Airflow DB on Postgres (env must be loaded for this)
-    su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow db init && airflow db migrate"
+    su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow db migrate"
 
     # Create admin user
     su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow users create --username '${var.airflow_admin_user}' --password '${var.airflow_admin_pass}' --firstname Admin --lastname User --role Admin --email admin@example.com"
 
-    # Simple systemd units
+    # Updated systemd units with environment file and dependencies
     cat >/etc/systemd/system/airflow-webserver.service <<'UNIT'
     [Unit]
     Description=Airflow Webserver
-    After=network.target
+    After=network.target postgresql.service redis6.service
+    Wants=postgresql.service redis6.service
 
     [Service]
     User=airflow
+    EnvironmentFile=/etc/airflow/airflow.env
     Environment=PATH=/home/airflow/venv/bin
     Environment=AIRFLOW_HOME=/home/airflow/airflow
     ExecStart=/home/airflow/venv/bin/airflow webserver --port 8080
@@ -161,10 +163,12 @@ module "ec2-airflow" {
     cat >/etc/systemd/system/airflow-scheduler.service <<'UNIT'
     [Unit]
     Description=Airflow Scheduler
-    After=network.target
+    After=network.target postgresql.service redis6.service airflow-webserver.service
+    Wants=postgresql.service redis6.service
 
     [Service]
     User=airflow
+    EnvironmentFile=/etc/airflow/airflow.env
     Environment=PATH=/home/airflow/venv/bin
     Environment=AIRFLOW_HOME=/home/airflow/airflow
     ExecStart=/home/airflow/venv/bin/airflow scheduler
@@ -174,8 +178,35 @@ module "ec2-airflow" {
     WantedBy=multi-user.target
     UNIT
 
+    # Add Celery worker service
+    cat >/etc/systemd/system/airflow-worker.service <<'UNIT'
+    [Unit]
+    Description=Airflow Celery Worker
+    After=network.target postgresql.service redis6.service airflow-webserver.service
+    Wants=postgresql.service redis6.service
+
+    [Service]
+    User=airflow
+    EnvironmentFile=/etc/airflow/airflow.env
+    Environment=PATH=/home/airflow/venv/bin
+    Environment=AIRFLOW_HOME=/home/airflow/airflow
+    ExecStart=/home/airflow/venv/bin/airflow celery worker
+    Restart=always
+
+    [Install]
+    WantedBy=multi-user.target
+    UNIT
+
+    # Wait for database to be ready
+    sleep 10
+
     systemctl daemon-reload
-    systemctl enable --now airflow-webserver.service airflow-scheduler.service
+    systemctl enable airflow-webserver airflow-scheduler airflow-worker
+    systemctl start airflow-webserver
+    sleep 5
+    systemctl start airflow-scheduler
+    sleep 5
+    systemctl start airflow-worker
   EOF
 }
 
