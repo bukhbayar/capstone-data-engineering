@@ -18,7 +18,7 @@ default_args = {
 
 # Dictionary mapping S3 keys to table names
 S3_KEYS = {
-    'customers': 'raw/customer/customers.csv',
+    'customers': 'raw/customers/customers.csv',
     'accounts': 'raw/accounts/accounts.csv',
     'transactions': 'raw/transactions/transactions.csv'
 }
