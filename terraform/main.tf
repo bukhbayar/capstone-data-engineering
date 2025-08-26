@@ -215,7 +215,7 @@ module "ec2-airflow" {
     systemctl start airflow-worker
 
 
-    sudo -u airflow aws s3 sync s3://${module.code_bucket.name}/dags/ /home/airflow/airflow/dags --delete
+    sudo -u airflow aws s3 sync s3://${module.code_bucket.bucket_name}/dags/ /home/airflow/airflow/dags --delete
 
   EOF
 }
