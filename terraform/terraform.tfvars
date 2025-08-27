@@ -5,7 +5,7 @@ bucket_name   = "buku"
 aws_region    = "ap-southeast-2"
 airflow_admin_user = "buku"
 airflow_admin_pass = "buku123123"
-dbt_container_image = "croixbleueqc/dbt:latest"
+dbt_container_image = "324037302945.dkr.ecr.ap-southeast-2.amazonaws.com/dbt:latest"
 
 csv_objects = {
   "customers/customers.csv" = "../datasets/customers.csv",
