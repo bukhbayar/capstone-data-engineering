@@ -23,11 +23,6 @@ ENV LANG=C.UTF-8
 
 RUN python -m pip install --upgrade "pip==24.0" "setuptools==69.2.0" "wheel==0.43.0" --no-cache-dir
 
-# RUN python -m pip install --no-cache-dir \
-#       "dbt-core==1.7.13" \
-#       "dbt-athena-community==1.7.7" \
-#       "awscli>=1.32" "boto3>=1.34"
-
 FROM base AS dbt-core
 
 ARG commit_ref=main
@@ -51,6 +46,8 @@ ENTRYPOINT ["dbt"]
 
 RUN python -m pip install --no-cache-dir "dbt-postgres @ git+https://github.com/dbt-labs/dbt-core@${commit_ref}#subdirectory=plugins/postgres"
 
+RUN python -m pip install  \
+      "dbt-athena-community==1.7.7"
 
 FROM dbt-core AS dbt-third-party
 
