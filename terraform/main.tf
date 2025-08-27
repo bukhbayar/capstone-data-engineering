@@ -239,11 +239,12 @@ module "batch" {
   project                = var.project
   environment            = var.environment
   vpc_id                 = module.network.vpc_id
-  private_subnet_ids     = module.network.public_subnet_ids
+  private_subnet_ids     = module.network.private_subnet_ids
   dbt_container_image    = var.dbt_container_image
   dbt_vcpu               = var.dbt_vcpu
   dbt_memory             = var.dbt_memory
   aws_region             = var.aws_region
+  depends_on             = [module.network]
 }
 
 module "network" {
