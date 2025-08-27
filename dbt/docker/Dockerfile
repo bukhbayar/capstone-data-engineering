@@ -1,35 +1,63 @@
-# docker/dbt-athena.Dockerfile
-FROM python:3.11-slim
+ARG py_version=3.11.2
 
-ENV PIP_NO_CACHE_DIR=1 \
-    PYTHONDONTWRITEBYTECODE=1 \
-    PYTHONUNBUFFERED=1
+FROM python:$py_version-slim-bullseye AS base
 
-# System packages needed for many python wheels (cryptography, pyarrow, etc.)
-# Note: no compilers if we can use prebuilt wheels, but keep basic build tools handy.
-RUN apt-get update && apt-get install -y --no-install-recommends \
-      build-essential \
-      curl ca-certificates git \
-      libssl-dev libffi-dev \
-      # optional but often useful:
-      # libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN apt-get update \
+  && apt-get dist-upgrade -y \
+  && apt-get install -y --no-install-recommends \
+    build-essential=12.9 \
+    ca-certificates=20210119 \
+    git=1:2.30.2-1+deb11u2 \
+    libpq-dev=13.22-0+deb11u1 \
+    make=4.3-4.1 \
+    openssh-client=1:8.4p1-5+deb11u3 \
+    software-properties-common=0.96.20.2-2.1 \
+  && apt-get clean \
+  && rm -rf \
+    /var/lib/apt/lists/* \
+    /tmp/* \
+    /var/tmp/*
 
-# Stabilize Python packaging toolchain (new setuptools versions broke some builds)
-RUN python -m pip install --upgrade \
-      "pip<25" "setuptools<70" "wheel>=0.42"
+ENV PYTHONIOENCODING=utf-8
+ENV LANG=C.UTF-8
 
-# Install dbt + Athena adapter + AWS libs (versions known to work together)
-# If you still hit resolver issues, add:  --verbose  to see exact failure.
-RUN pip install --no-cache-dir \
+RUN python -m pip install --upgrade "pip==24.0" "setuptools==69.2.0" "wheel==0.43.0" --no-cache-dir
+
+RUN python -m pip install --no-cache-dir \
       "dbt-core==1.7.13" \
       "dbt-athena-community==1.7.7" \
       "awscli>=1.32" "boto3>=1.34"
 
-# Non-root user
-RUN useradd -m app
-USER app
-WORKDIR /app
+FROM base AS dbt-core
 
-ENTRYPOINT ["bash","-lc"]
-CMD ["dbt --help"]
+ARG commit_ref=main
+
+HEALTHCHECK CMD dbt --version || exit 1
+
+WORKDIR /usr/app/dbt/
+ENTRYPOINT ["dbt"]
+
+RUN python -m pip install --no-cache-dir "dbt-core @ git+https://github.com/dbt-labs/dbt-core@${commit_ref}#subdirectory=core"
+
+
+FROM base AS dbt-postgres
+
+ARG commit_ref=main
+
+HEALTHCHECK CMD dbt --version || exit 1
+
+WORKDIR /usr/app/dbt/
+ENTRYPOINT ["dbt"]
+
+RUN python -m pip install --no-cache-dir "dbt-postgres @ git+https://github.com/dbt-labs/dbt-core@${commit_ref}#subdirectory=plugins/postgres"
+
+
+FROM dbt-core AS dbt-third-party
+
+ARG dbt_third_party
+
+RUN if [ "$dbt_third_party" ]; then \
+        python -m pip install --no-cache-dir "${dbt_third_party}"; \
+    else \
+        echo "No third party adapter provided"; \
+    fi \
