@@ -39,3 +39,8 @@ variable aws_region {
   description = "The AWS region where resources will be created"
   type        = string
 }
+
+variable private_route_table_ids {
+  description = "List of private route table IDs for the VPC endpoint"
+  type        = list(string)
+}

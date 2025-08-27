@@ -2,20 +2,20 @@
 locals { ifaces = ["ecr.api","ecr.dkr","logs","sts"] }
 resource "aws_vpc_endpoint" "ifaces" {
   for_each            = toset([for s in local.ifaces : "com.amazonaws.${var.aws_region}.${s}"])
-  vpc_id              = module.network.vpc_id
+  vpc_id              = var.vpc_id
   service_name        = each.value
   vpc_endpoint_type   = "Interface"
   private_dns_enabled = true
-  subnet_ids          = module.network.private_subnet_ids
+  subnet_ids          = var.private_subnet_ids
   security_group_ids  = [aws_security_group.batch.id]
 }
 
 # Gateway endpoint for S3
 resource "aws_vpc_endpoint" "s3_gw" {
-  vpc_id            = module.network.vpc_id
+  vpc_id            = var.vpc_id
   service_name      = "com.amazonaws.${var.aws_region}.s3"
   vpc_endpoint_type = "Gateway"
-  route_table_ids   = module.network.private_route_table_ids
+  route_table_ids   = var.private_route_table_ids
 }
 
 # Compute Environment (Fargate)
