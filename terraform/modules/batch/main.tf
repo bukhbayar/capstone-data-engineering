@@ -54,7 +54,7 @@ resource "aws_batch_job_definition" "dbt" {
   platform_capabilities = ["FARGATE"]
   container_properties  = jsonencode({
     image     : var.dbt_container_image,
-    command   : ["--version"],  # replace with your dbt command
+    command   : ["debug"],  # replace with your dbt command
     fargatePlatformConfiguration : { platformVersion : "LATEST" },
     resourceRequirements : [
       { type : "VCPU",   value : tostring(var.dbt_vcpu) },
