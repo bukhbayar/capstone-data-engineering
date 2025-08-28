@@ -49,7 +49,7 @@ RUN python -m pip install --no-cache-dir dbt-postgres==1.7.3
 RUN python -m pip install "dbt-athena-community==1.7.2"
 
 # Copy dbt project files
-COPY ../dbt/ /usr/app/dbt/
+COPY ./dbt/ /usr/app/dbt/
 # COPY ../dbt/profiles.yml /root/.dbt/profiles.yml
 
 WORKDIR /usr/app/dbt/
