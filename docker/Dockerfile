@@ -37,24 +37,21 @@ RUN python -m pip install --no-cache-dir "dbt-core @ git+https://github.com/dbt-
 
 FROM base AS dbt-postgres
 
+# Add ARG declaration here
 ARG commit_ref=main
 
-HEALTHCHECK CMD dbt --version || exit 1
+# Create necessary directories
+RUN mkdir -p /root/.dbt
+
+# Install dbt-postgres from PyPI
+RUN python -m pip install --no-cache-dir dbt-postgres==1.7.3
+
+RUN python -m pip install "dbt-athena-community==1.7.2"
+
+# Copy dbt project files
+COPY ./dbt/ /usr/app/dbt/
+COPY ./dbt/profiles.yml /root/.dbt/profiles.yml
 
 WORKDIR /usr/app/dbt/
-ENTRYPOINT ["dbt"]
 
-RUN python -m pip install --no-cache-dir "dbt-postgres @ git+https://github.com/dbt-labs/dbt-core@${commit_ref}#subdirectory=plugins/postgres"
-
-RUN python -m pip install  \
-      "dbt-athena-community==1.7.7"
-
-FROM dbt-core AS dbt-third-party
-
-ARG dbt_third_party
-
-RUN if [ "$dbt_third_party" ]; then \
-        python -m pip install --no-cache-dir "${dbt_third_party}"; \
-    else \
-        echo "No third party adapter provided"; \
-    fi \
+ENTRYPOINT ["/bin/bash", "dbt"]
