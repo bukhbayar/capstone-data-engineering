@@ -2,7 +2,7 @@ dbt_demo2:
   outputs:
     dev:
       dbname: bootcamp_db
-      host: 10.20.1.50"
+      host: 10.20.1.50
       pass: bootcamp_password
       port: 5432
       schema: public
