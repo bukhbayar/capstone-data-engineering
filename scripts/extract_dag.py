@@ -18,9 +18,9 @@ default_args = {
 
 # Dictionary mapping S3 keys to table names
 S3_KEYS = {
-    'customers': 'raw/customers/customers.csv',
-    'accounts': 'raw/accounts/accounts.csv',
-    'transactions': 'raw/transactions/transactions.csv'
+    'customers': 'landing/customers/customers.csv',
+    'accounts': 'landing/accounts/accounts.csv',
+    'transactions': 'landing/transactions/transactions.csv'
 }
 
 def load_csv_to_postgres(table_name: str, s3_key: str):
