@@ -2,7 +2,7 @@ resource "aws_s3_object" "csv" {
   for_each = var.csv_objects
 
   bucket       = module.data_bucket.bucket_name
-  key          = "raw/${each.key}"
+  key          = "landing/${each.key}"
   source       = each.value
   content_type = "text/csv"
 

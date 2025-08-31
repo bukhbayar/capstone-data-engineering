@@ -89,5 +89,5 @@ variable "create_airflow" {
 
 variable glue_db_name {
   description = "The name of the Glue database"
-  type        = string
+  type        = list(string)
 }

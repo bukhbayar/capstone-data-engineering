@@ -27,4 +27,4 @@ ip_addresses = [
     "10.20.1.51"
 ]
 
-glue_db_name = "clean"
+glue_db_name = ["raw", "clean"]
