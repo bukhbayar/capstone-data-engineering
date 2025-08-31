@@ -50,15 +50,17 @@ def _export_one_table(table: str, ds: str):
 
 @dag(
     dag_id="export_postgres_to_s3_raw_parquet",
-    schedule="@daily",                 # or None if you only trigger manually
-    start_date=datetime(2025, 1, 1),   # pick an appropriate start
+    schedule="@daily",
+    start_date=datetime(2025, 1, 1),
     catchup=False,
     default_args={"owner": "data-eng", "retries": 1},
     tags=["export","postgres","s3","parquet","lake"],
 )
 def export_postgres_to_s3_raw_parquet():
     @task
-    def export_table(table: str, ds: str = "{{ ds }}"):
+    def export_table(table: str, ds: str | None = None):  # Changed this line
+        if ds is None:
+            raise ValueError("execution date (ds) is required")
         _export_one_table(table, ds)
 
     # dynamic mapping over the tables
