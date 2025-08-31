@@ -96,6 +96,7 @@ module "ec2-airflow" {
       'cryptography' \
       'SQLAlchemy>=1.4.0,<2.0.0' \
       'psycopg2-binary>=2.9.0' \
+      'pyarrow>=8.0.0' \
       'alembic>=1.6.3'"
 
     # Install Airflow and dependencies
@@ -214,6 +215,12 @@ module "ec2-airflow" {
     sleep 5
     systemctl start airflow-worker
 
+
+    # Create postgress connection
+    su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; \
+    airflow connections add postgres_default \
+    --conn-uri "postgresql+psycopg2://bootcamp_user:bootcamp_password@10.20.1.50:5432/bootcamp_db" \
+    --conn-description "Postgres on EC2 (bootcamp_db)"
 
     sudo -u airflow aws s3 sync s3://${module.code_bucket.bucket_name}/dags/ /home/airflow/airflow/dags --delete
 
