@@ -96,7 +96,7 @@ module "ec2-airflow" {
       'cryptography' \
       'SQLAlchemy>=1.4.0,<2.0.0' \
       'psycopg2-binary>=2.9.0' \
-      'pyarrow>=8.0.0' \
+      'pyarrow>=21.0.0' \
       'alembic>=1.6.3'"
 
     # Install Airflow and dependencies
