@@ -10,3 +10,16 @@ dbt_demo2:
       type: postgres
       user: bootcamp_user
   target: dev
+
+lake:
+  target: dev
+  outputs:
+    dev:
+      type: athena
+      region_name: ap-southeast-2
+      work_group: dbt-wg
+      database: raw
+      schema: raw
+      s3_staging_dir: s3://<results-bucket>/athena/stage/
+      s3_data_dir:    s3://<lake-bucket>/
+      threads: 5
