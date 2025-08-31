@@ -86,3 +86,8 @@ variable "create_airflow" {
   description = "Flag to create a airflow"
   type        = bool
 }
+
+variable glue_db_name {
+  description = "The name of the Glue database"
+  type        = string
+}
