@@ -21,10 +21,10 @@ locals {
     # Check if the connection exists
     if sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections get postgres_default >/dev/null 2>&1"; then
       echo "[conn:postgres_default] exists → overwriting"
-      sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --overwrite --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db' --yes"
+      yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --overwrite --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
     else
       echo "[conn:postgres_default] creating"
-      sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db' --yes"
+      yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
     fi
 
     echo "Airflow connections ensured."
