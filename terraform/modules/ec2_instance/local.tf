@@ -30,7 +30,7 @@ locals {
     }
 
     # --------- Postgres connection ---------
-    PG_URI="postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}"
+    PG_URI="postgresql+psycopg2://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}"
     upsert_conn postgres_default \
       --conn-uri "$PG_URI" \
       --conn-description "Postgres on EC2 (bootcamp_db)"
