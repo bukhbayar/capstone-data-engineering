@@ -27,3 +27,6 @@ locals {
     echo "Airflow connections ensured."
   EOF
 }
+
+
+sudo su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --conn-uri 'postgresql+psycopg2://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}' --conn-description 'Postgres on EC2 - bootcamp_db'"
