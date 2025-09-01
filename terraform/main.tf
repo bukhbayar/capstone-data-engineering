@@ -27,7 +27,7 @@ module "ec2-datatabase" {
   airflow_admin_user = ""
   airflow_admin_pass = ""
   airflow_dags_bucket = ""
-  airflow_scripts  = ""
+  airflow_scripts  = "echo 'No scripts to run'"
   ssh_private_key = var.ssh_private_key
 
   private_ip      = var.ip_addresses[0]

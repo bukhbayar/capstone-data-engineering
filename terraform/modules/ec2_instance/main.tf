@@ -19,6 +19,11 @@ resource "aws_instance" "this" {
 }
 
 resource "null_resource" "remote_commands" {
+  # Add triggers to ensure the resource runs when instance changes
+  triggers = {
+    instance_id = aws_instance.this.id
+  }
+
   connection {
     type        = "ssh"
     host        = aws_instance.this.public_ip
