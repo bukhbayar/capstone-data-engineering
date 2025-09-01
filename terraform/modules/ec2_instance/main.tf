@@ -25,7 +25,7 @@ resource "null_resource" "instance" {
     connection {
       type        = "ssh"
       user        = "ec2-user"
-      private_key = var.ssh_private_key
+      private_key = file(var.ssh_private_key)
       host        = aws_instance.this.public_ip
     }
 
