@@ -40,3 +40,20 @@ resource "aws_iam_role_policy" "s3_logs_rw" {
     }]
   })
 }
+
+resource "aws_iam_role_policy" "batch_policy" {
+  name   = "airflow-batch-policy"
+  role   = aws_iam_role.role.id
+  policy = jsonencode({
+    Version="2012-10-17",
+    Statement=[{
+      Effect="Allow",
+      Action=[
+        "batch:*"
+        ],
+      Resource=[
+        "*"
+      ]
+    }]
+  })
+}
