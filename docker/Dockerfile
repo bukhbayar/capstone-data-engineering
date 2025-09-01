@@ -43,15 +43,26 @@ ARG commit_ref=main
 # Create necessary directories
 RUN mkdir -p /root/.dbt
 
-# Install dbt-postgres from PyPI
-RUN python -m pip install --no-cache-dir dbt-postgres==1.7.3
+# Install specific protobuf version first
+RUN python -m pip install --no-cache-dir "protobuf>=3.20.0,<4.0.0"
 
-RUN python -m pip install "dbt-athena-community==1.7.2"
+# Install dbt packages with specific versions
+RUN python -m pip install --no-cache-dir \
+    dbt-core==1.7.3 \
+    dbt-postgres==1.7.3 \
+    dbt-athena-community==1.7.2
 
 # Copy dbt project files
 COPY . /usr/app/dbt/
-# COPY ../dbt/profiles.yml /root/.dbt/profiles.yml
 
 WORKDIR /usr/app/dbt/
 
-ENTRYPOINT ["dbt"]
+# Add wrapper script to handle exit codes properly
+RUN echo '#!/bin/bash\n\
+set -e\n\
+dbt "$@"\n\
+exit_code=$?\n\
+exit $exit_code' > /usr/local/bin/dbt-wrapper && \
+    chmod +x /usr/local/bin/dbt-wrapper
+
+ENTRYPOINT ["/usr/local/bin/dbt-wrapper"]
