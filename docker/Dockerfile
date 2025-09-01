@@ -44,7 +44,7 @@ ARG commit_ref=main
 RUN mkdir -p /root/.dbt
 
 # Install specific protobuf version first
-RUN python -m pip install --no-cache-dir "protobuf>=6.0,<7.0"
+RUN python -m pip install --no-cache-dir "protobuf>=4.23,<5"
 
 # Install dbt packages with specific versions
 RUN python -m pip install --no-cache-dir \
