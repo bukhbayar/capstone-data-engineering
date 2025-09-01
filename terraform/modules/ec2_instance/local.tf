@@ -18,10 +18,10 @@ locals {
     # Idempotent upsert of the connection
     if $AIRFLOW_SH connections get postgres_default >/dev/null 2>&1;" then
       echo "[conn:postgres_default] exists → overwriting"
-      su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow connections add postgres_default --overwrite --conn-uri $${PG_URI} --conn-description 'Postgres on EC2 - bootcamp_db'"
+      su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --overwrite --conn-uri '$${PG_URI}' --conn-description 'Postgres on EC2 - bootcamp_db'"
     else
       echo "[conn:postgres_default] creating"
-      su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow connections add postgres_default --conn-uri $${PG_URI} --conn-description 'Postgres on EC2 - bootcamp_db'"
+      su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --conn-uri '$${PG_URI}' --conn-description 'Postgres on EC2 - bootcamp_db'"
     fi
 
     echo "Airflow connections ensured."
