@@ -97,19 +97,18 @@ module "ec2-airflow" {
       'SQLAlchemy>=1.4.0,<2.0.0' \
       'psycopg2-binary>=2.9.0' \
       'pyarrow>=21.0.0' \
+      'apache-airflow-providers-dbt-cloud' \
+      'apache-airflow-providers-common-sql' \
+      'apache-airflow-providers-standard' \
+      'apache-airflow-providers-amazon' \
+      'apache-airflow-providers-postgres' \
+      'pandas' \
       'alembic>=1.6.3'"
 
     # Install Airflow and dependencies
     su - airflow -c "source ~/venv/bin/activate && pip install \
         'apache-airflow==2.9.2' \
         'apache-airflow[amazon,postgres,celery,redis]==2.9.2' \
-        'apache-airflow-providers-dbt-cloud' \
-        'apache-airflow-providers-common-sql' \
-        'apache-airflow-providers-standard' \
-        'apache-airflow-providers-amazon' \
-        'apache-airflow-providers-postgres' \
-        'pandas' \
-        'sqlalchemy' \
          --constraint 'https://raw.githubusercontent.com/apache/airflow/constraints-2.9.2/constraints-3.11.txt'"
 
     # Redis

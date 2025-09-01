@@ -19,8 +19,6 @@ resource "aws_instance" "this" {
 }
 
 resource "null_resource" "remote_commands" {
-  count = var.airflow_scripts!="" ? 1 : 0
-
   connection {
     type        = "ssh"
     host        = aws_instance.this.public_ip
