@@ -16,7 +16,7 @@ locals {
     PG_URI="postgresql+psycopg2://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}"
 
     # Idempotent upsert of the connection
-    if su - airflow -c "source ~/venv/bin/activate; airflow connections get postgres_default >/dev/null 2>&1; then
+    if su - airflow -c "source ~/venv/bin/activate; airflow connections get postgres_default >/dev/null 2>&1;" then
       echo "[conn:postgres_default] exists → overwriting"
       su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --overwrite --conn-uri '$${PG_URI}' --conn-description 'Postgres on EC2 - bootcamp_db'"
     else
