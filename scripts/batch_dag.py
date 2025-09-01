@@ -2,7 +2,8 @@ from datetime import datetime
 from airflow import DAG
 from airflow.models import Variable
 from airflow.utils.trigger_rule import TriggerRule
-from airflow.providers.amazon.aws.operators.batch import BatchSubmitJobOperator
+from airflow.providers.aws.operators.batch import BatchOperator
+
 
 JOB_QUEUE       = Variable.get("BATCH_JOB_QUEUE", default_var="data-lake-dev-batch-queue")
 JOB_DEFINITION  = Variable.get("BATCH_JOB_DEFINITION", default_var="data-lake-dev-batch-dbt")
@@ -20,23 +21,20 @@ with DAG(
     tags=["dbt","batch"],
 ) as dag:
 
-    run_dbt = BatchSubmitJobOperator(
+    run_dbt = BatchOperator(
         task_id="submit_dbt_job",
         job_name="dbt-{{ ds_nodash }}",
         job_queue=JOB_QUEUE,
         job_definition=JOB_DEFINITION,
-        # Pass the command through the *parameters* map
+        # Rest of the configuration remains the same
         parameters={
-            # Prefer run config value if provided, otherwise DAG param default
             "cmd": "{{ dag_run.conf.get('dbt_cmd', params.dbt_cmd) }}"
         },
-        # Optionally add/override environment variables
         overrides={
             "environment": [
                 {"name": "DBT_TARGET", "value": f"{DEFAULT_TARGET}"},
-                # add more if your image expects them
             ]
         },
-        wait_for_completion=True,   # or False if you want fire-and-forget
+        wait_for_completion=True,
         max_retries=0,
     )

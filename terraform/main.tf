@@ -104,11 +104,11 @@ module "ec2-airflow" {
       'SQLAlchemy>=1.4.0,<2.0.0' \
       'psycopg2-binary>=2.9.0' \
       'pyarrow>=21.0.0' \
-      'apache-airflow-providers-dbt-cloud' \
-      'apache-airflow-providers-common-sql' \
-      'apache-airflow-providers-standard' \
-      'apache-airflow-providers-amazon' \
-      'apache-airflow-providers-postgres' \
+      'apache-airflow-providers-dbt-cloud>=3.0.0' \
+      'apache-airflow-providers-common-sql>=1.10.0' \
+      'apache-airflow-providers-standard>=1.0.0' \
+      'apache-airflow-providers-amazon>=8.0.0,<9.0.0' \
+      'apache-airflow-providers-postgres>=5.10.0' \
       'pandas' \
       'alembic>=1.6.3'"
 
