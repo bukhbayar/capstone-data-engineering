@@ -5,7 +5,6 @@ from airflow.utils.trigger_rule import TriggerRule
 from airflow.providers.amazon.aws.operators.batch import BatchOperator
 
 
-
 JOB_QUEUE       = Variable.get("BATCH_JOB_QUEUE", default_var="data-lake-dev-batch-queue")
 JOB_DEFINITION  = Variable.get("BATCH_JOB_DEFINITION", default_var="data-lake-dev-batch-dbt")
 DEFAULT_TARGET  = Variable.get("DBT_TARGET", default_var="dev")
