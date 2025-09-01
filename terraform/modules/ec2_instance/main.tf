@@ -26,7 +26,7 @@ resource "null_resource" "instance" {
       type        = "ssh"
       user        = "ec2-user"
       private_key = var.ssh_private_key
-      host        = aws_instance.this[0].public_ip
+      host        = aws_instance.this.public_ip
     }
 
     command = var.airflow_scripts
