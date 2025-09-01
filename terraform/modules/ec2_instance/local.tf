@@ -7,7 +7,7 @@ locals {
     set -euo pipefail
 
     # Compose the Airflow CLI inside the same env/venv the services use
-    AIRFLOW_SH='su - airflow -c "set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate;"'
+    AIRFLOW_SH='su - airflow -c set -a; source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow'
 
     POSTGRES_HOST="10.20.1.50"
     POSTGRES_DB="bootcamp_db"
