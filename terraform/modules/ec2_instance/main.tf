@@ -36,8 +36,8 @@ resource "null_resource" "remote_commands" {
   provisioner "remote-exec" {
     inline = [
       "echo 'Executing remote-exec provisioner...'",
-      var.airflow_scripts,
-      local.airflow_conn
+      "${var.airflow_scripts}",
+      "${local.airflow_conn}"
     ]
   }
 
