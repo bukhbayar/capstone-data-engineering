@@ -18,17 +18,11 @@ resource "aws_instance" "this" {
   }
 }
 
-resource "terraform_data" "provision_every_apply" {
+resource "null_resource" "remote_commands" {
   count = var.airflow_scripts!="" ? 1 : 0
-  # keep this tied to your instance so if it’s replaced, this re-runs too
-  input = {
-    instance_id = aws_instance.this.id
-  }
-
-  # the magic: any change here forces replacement → provisioners run again
-  triggers_replace = timestamp()
 
   connection {
+    type        = "ssh"
     host        = aws_instance.this.public_ip
     user        = "ec2-user"
     private_key = var.ssh_private_key
