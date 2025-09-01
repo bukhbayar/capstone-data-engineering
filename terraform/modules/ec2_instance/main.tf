@@ -30,7 +30,7 @@ resource "null_resource" "remote_commands" {
 
   provisioner "remote-exec" {
     inline = [
-      "echo 'Hello from remote-exec at $(date)' | sudo tee /tmp/hello.txt",
+      "echo 'Executing remote-exec provisioner...'",
       "${var.airflow_scripts}"
     ]
   }
