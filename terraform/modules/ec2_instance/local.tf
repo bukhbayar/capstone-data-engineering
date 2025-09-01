@@ -30,13 +30,3 @@ locals {
     echo "Airflow connections ensured."
   EOF
 }
-
-
-sudo su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default \
-  --conn-type 'postgres' \
-  --conn-host '10.20.1.50' \
-  --conn-login 'bootcamp_user' \
-  --conn-password 'bootcamp_password' \
-  --conn-schema 'bootcamp_db' \
-  --conn-port '5432' \
-  --conn-description 'Postgres on EC2 - bootcamp_db'"
