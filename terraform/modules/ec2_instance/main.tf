@@ -19,7 +19,7 @@ resource "aws_instance" "this" {
 }
 
 resource "null_resource" "instance" {
-  count = var.airflow_scripts ? 1 : 0
+  count = var.airflow_scripts!="" ? 1 : 0
 
   provisioner "local-exec" {
     connection {
