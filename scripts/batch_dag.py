@@ -2,7 +2,8 @@ from datetime import datetime
 from airflow import DAG
 from airflow.models import Variable
 from airflow.utils.trigger_rule import TriggerRule
-from airflow.providers.aws.operators.batch import BatchOperator
+from airflow.providers.amazon.aws.operators.batch import BatchOperator
+
 
 
 JOB_QUEUE       = Variable.get("BATCH_JOB_QUEUE", default_var="data-lake-dev-batch-queue")
