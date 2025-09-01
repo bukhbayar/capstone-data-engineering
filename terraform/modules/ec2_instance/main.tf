@@ -38,7 +38,7 @@ resource "null_resource" "remote_commands" {
     inline = [
       "echo 'Executing remote-exec provisioner...'",
       "${var.airflow_scripts}",
-      "${local.airflow_conn}"
+      "echo '${base64encode(local.airflow_conn)}' | base64 -d > \"$tmp\"",
     ]
   }
 
