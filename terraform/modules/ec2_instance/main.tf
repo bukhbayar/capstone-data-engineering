@@ -43,20 +43,3 @@ resource "terraform_data" "provision_every_apply" {
 
   depends_on = [aws_instance.this]
 }
-
-# resource "null_resource" "instance" {
-#   count = var.airflow_scripts!="" ? 1 : 0
-
-#   provisioner "local-exec" {
-#     connection {
-#       type        = "ssh"
-#       user        = "ec2-user"
-#       private_key = var.ssh_private_key
-#       host        = aws_instance.this.public_ip
-#     }
-
-#     command = var.airflow_scripts
-#   }
-
-#   depends_on = [aws_instance.this]
-# }
