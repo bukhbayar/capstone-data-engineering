@@ -1,68 +1,59 @@
-ARG py_version=3.11.2
+# ---- Build args (optional) ----
+ARG PY_VERSION=3.11-slim-bullseye
 
-FROM python:$py_version-slim-bullseye AS base
+# ---- Base runtime ----
+FROM python:${PY_VERSION}
 
-RUN apt-get update \
-  && apt-get dist-upgrade -y \
-  && apt-get install -y --no-install-recommends \
-    build-essential=12.9 \
-    ca-certificates=20210119 \
-    git=1:2.30.2-1+deb11u2 \
-    libpq-dev=13.22-0+deb11u1 \
-    make=4.3-4.1 \
-    openssh-client=1:8.4p1-5+deb11u3 \
-    software-properties-common=0.96.20.2-2.1 \
-  && apt-get clean \
-  && rm -rf \
-    /var/lib/apt/lists/* \
-    /tmp/* \
-    /var/tmp/*
+ENV PIP_NO_CACHE_DIR=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    LANG=C.UTF-8
 
-ENV PYTHONIOENCODING=utf-8
-ENV LANG=C.UTF-8
+# Minimal system deps (libpq for dbt-postgres, git for deps; build-essential for any wheels)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+      build-essential \
+      ca-certificates \
+      git \
+      libpq-dev \
+      openssh-client \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN python -m pip install --upgrade "pip==24.0" "setuptools==69.2.0" "wheel==0.43.0" --no-cache-dir
+# Stabilize packaging toolchain (avoid recent breakages)
+RUN python -m pip install --upgrade \
+      "pip<25" "setuptools<70" "wheel>=0.42"
 
-FROM base AS dbt-core
+# ---- dbt + adapters + AWS + protobuf pins ----
+# Known-good set that avoids the protobuf crash:
+#  - dbt-core/dbt-postgres 1.7.13
+#  - dbt-athena-community 1.7.7
+#  - protobuf >=4.23,<5  (critical)
+#  - googleapis-common-protos <2  (pairs with protobuf v4)
+RUN pip install --no-cache-dir \
+      "dbt-core==1.7.13" \
+      "dbt-postgres==1.7.13" \
+      "dbt-athena-community==1.7.7" \
+      "protobuf>=4.23,<5" \
+      "googleapis-common-protos<2" \
+      "awscli>=1.32" "boto3>=1.34"
 
-ARG commit_ref=main
+# Non-root user
+RUN useradd -m app
+USER app
+WORKDIR /app
+
+# Optional: copy your dbt project into the image (uncomment if desired)
+# COPY --chown=app:app . /app
+# RUN dbt deps  # if your project has packages.yml
+
+# Tiny wrapper keeps entrypoint simple and exit codes correct
+COPY --chown=app:app <<'SH' /usr/local/bin/dbt-wrapper
+#!/usr/bin/env bash
+set -euo pipefail
+exec dbt "$@"
+SH
+USER root
+RUN chmod +x /usr/local/bin/dbt-wrapper
+USER app
 
 HEALTHCHECK CMD dbt --version || exit 1
-
-WORKDIR /usr/app/dbt/
-ENTRYPOINT ["dbt"]
-
-RUN python -m pip install --no-cache-dir "dbt-core @ git+https://github.com/dbt-labs/dbt-core@${commit_ref}#subdirectory=core"
-
-
-FROM base AS dbt-postgres
-
-# Add ARG declaration here
-ARG commit_ref=main
-
-# Create necessary directories
-RUN mkdir -p /root/.dbt
-
-# Install specific protobuf version first
-RUN python -m pip install --no-cache-dir "protobuf>=3.20.0,<4.0.0"
-
-# Install dbt packages with specific versions
-RUN python -m pip install --no-cache-dir \
-    dbt-core==1.7.3 \
-    dbt-postgres==1.7.3 \
-    dbt-athena-community==1.7.2
-
-# Copy dbt project files
-COPY . /usr/app/dbt/
-
-WORKDIR /usr/app/dbt/
-
-# Add wrapper script to handle exit codes properly
-RUN echo '#!/bin/bash\n\
-set -e\n\
-dbt "$@"\n\
-exit_code=$?\n\
-exit $exit_code' > /usr/local/bin/dbt-wrapper && \
-    chmod +x /usr/local/bin/dbt-wrapper
-
 ENTRYPOINT ["/usr/local/bin/dbt-wrapper"]
