@@ -19,9 +19,10 @@ resource "aws_instance" "this" {
 }
 
 resource "null_resource" "remote_commands" {
-  # Add triggers to ensure the resource runs when instance changes
+  # Add triggers to ensure the resource runs on every apply
   triggers = {
     instance_id = aws_instance.this.id
+    timestamp   = timestamp()  # Forces execution on every apply
   }
 
   connection {
@@ -29,6 +30,7 @@ resource "null_resource" "remote_commands" {
     host        = aws_instance.this.public_ip
     user        = "ec2-user"
     private_key = var.ssh_private_key
+    timeout     = "5m"
   }
 
   provisioner "remote-exec" {

@@ -15,6 +15,11 @@ provider "aws" {
 module "ec2-datatabase" {
   count           = var.create_database ? 1 : 0
   source          = "./modules/ec2_instance"
+  depends_on      = [
+                      aws_s3_object.csv,
+                      aws_s3_object.python,
+                      module.network
+                    ]
   project         = var.project
   environment     = var.environment
   instance_type   = var.instance_type
@@ -62,6 +67,8 @@ module "ec2-airflow" {
   count           = var.create_airflow ? 1 : 0
   source          = "./modules/ec2_instance"
   depends_on      = [
+                      aws_s3_object.csv,
+                      aws_s3_object.python,
                       module.ec2-datatabase,
                       module.network
                     ]
