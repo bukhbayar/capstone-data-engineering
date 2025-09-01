@@ -29,8 +29,8 @@ resource "terraform_data" "provision_every_apply" {
   triggers_replace = timestamp()
 
   connection {
-    host        = aws_instance.this.private_ip
-    user        = "ec2-user"          # or "ubuntu", etc
+    host        = aws_instance.this.public_ip
+    user        = "ec2-user"
     private_key = var.ssh_private_key
   }
 
