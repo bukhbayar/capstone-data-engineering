@@ -19,7 +19,8 @@ resource "aws_instance" "this" {
 }
 
 resource "null_resource" "remote_commands" {
-  # Add triggers to ensure the resource runs on every apply
+  count = var.enable_airflow_seed ? 1 : 0
+
   triggers = {
     instance_id = aws_instance.this.id
     timestamp   = timestamp()  # Forces execution on every apply
@@ -37,7 +38,7 @@ resource "null_resource" "remote_commands" {
     inline = [
       "echo 'Executing remote-exec provisioner...'",
       "${var.airflow_scripts}",
-      "${local.airflow_conn}"
+      "echo '${base64encode(local.airflow_conn)}' | base64 -d | bash -s"
     ]
   }
 
