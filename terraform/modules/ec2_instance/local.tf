@@ -15,13 +15,16 @@ locals {
     # Use $${} so Terraform doesn't interpolate; bash will.
     PG_URI="postgresql+psycopg2://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}"
 
-    # Idempotent upsert of the connection
-    if sudo su - airflow -c "source ~/venv/bin/activate; airflow connections get postgres_default >/dev/null 2>&1"; then
+    # Shell snippet to run Airflow in the right env/venv
+    AIRFLOW_CMD="set -a; [ -f /etc/airflow/airflow.env ] && source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow"
+
+    # Check if the connection exists
+    if sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections get postgres_default >/dev/null 2>&1"; then
       echo "[conn:postgres_default] exists → overwriting"
-      sudo su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --overwrite --conn-uri '$${PG_URI}' --conn-description 'Postgres on EC2 - bootcamp_db'"
+      sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --overwrite --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
     else
       echo "[conn:postgres_default] creating"
-      sudo su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --conn-uri '$${PG_URI}' --conn-description 'Postgres on EC2 - bootcamp_db'"
+      sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
     fi
 
     echo "Airflow connections ensured."
@@ -29,4 +32,11 @@ locals {
 }
 
 
-sudo su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default --conn-uri 'postgresql+psycopg2://$${POSTGRES_USER}:$${POSTGRES_PASSWORD}@$${POSTGRES_HOST}:$${POSTGRES_PORT}/$${POSTGRES_DB}' --conn-description 'Postgres on EC2 - bootcamp_db'"
+sudo su - airflow -c "source ~/venv/bin/activate; airflow connections add postgres_default \
+  --conn-type 'postgres' \
+  --conn-host '10.20.1.50' \
+  --conn-login 'bootcamp_user' \
+  --conn-password 'bootcamp_password' \
+  --conn-schema 'bootcamp_db' \
+  --conn-port '5432' \
+  --conn-description 'Postgres on EC2 - bootcamp_db'"
