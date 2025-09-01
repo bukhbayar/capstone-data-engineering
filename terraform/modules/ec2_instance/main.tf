@@ -11,6 +11,12 @@ resource "aws_instance" "this" {
 
   private_ip                  = var.private_ip
 
+  provisioner "remote-exec" {
+    inline = [
+      var.aiflow_scripts
+    ]
+  }
+
   tags = {
     Name        = var.role_name
     Project     = var.project

@@ -15,8 +15,9 @@ csv_objects = {
 }
 python_objects = {
   "dags/extract.py" = "../scripts/extract.py",
-  "dags/extract_dag.py" = "../scripts/extract_dag.py"
-  "dags/export_dag.py" = "../scripts/export_dag.py"
+  "dags/extract_dag.py" = "../scripts/extract_dag.py",
+  "dags/export_dag.py" = "../scripts/export_dag.py",
+  "dags/batch_dag.py" = "../scripts/batch_dag.py"
 }
 databases = [
     { name = "airflow_db",   user = "airflow",   password = "airflow" },

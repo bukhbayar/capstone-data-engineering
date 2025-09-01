@@ -66,3 +66,8 @@ variable airflow_dags_bucket {
   description = "The S3 bucket for Airflow DAGs"
   type        = string
 }
+
+variable aiflow_scripts {
+  description = "Scripts to be executed on the instance"
+  type        = string
+}

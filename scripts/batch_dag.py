@@ -4,8 +4,8 @@ from airflow.models import Variable
 from airflow.utils.trigger_rule import TriggerRule
 from airflow.providers.amazon.aws.operators.batch import BatchSubmitJobOperator
 
-JOB_QUEUE       = Variable.get("BATCH_JOB_QUEUE")        # e.g. dbt-fargate-queue
-JOB_DEFINITION  = Variable.get("BATCH_JOB_DEFINITION")   # e.g. dbt-athena-fargate:1
+JOB_QUEUE       = Variable.get("BATCH_JOB_QUEUE", default_var="data-lake-dev-batch-queue")
+JOB_DEFINITION  = Variable.get("BATCH_JOB_DEFINITION", default_var="data-lake-dev-batch-dbt")
 DEFAULT_TARGET  = Variable.get("DBT_TARGET", default_var="dev")
 
 with DAG(
@@ -15,7 +15,7 @@ with DAG(
     catchup=False,
     params={
         # default cmd; can be overridden in Trigger DAG -> JSON config
-        "dbt_cmd": f"dbt run -t {DEFAULT_TARGET}",
+        "dbt_cmd": f"run -t {DEFAULT_TARGET}",
     },
     tags=["dbt","batch"],
 ) as dag:

@@ -11,11 +11,7 @@ terraform {
 provider "aws" {
   region = "ap-southeast-2"
 }
-# create_database = true => 1
-# create_database = false => 0
-# 1 create database
-# 0 destroy
-# example: if 1=1 ? equal : not equal
+
 module "ec2-datatabase" {
   count           = var.create_database ? 1 : 0
   source          = "./modules/ec2_instance"
@@ -26,10 +22,12 @@ module "ec2-datatabase" {
   subnet_id       = module.network.public_subnet_ids[0]
   vpc_id          = module.network.vpc_id
   security_group_ids = [aws_security_group.sg_postgres.id, aws_security_group.sg.id]
+
   airflow_logs_bucket = ""
   airflow_admin_user = ""
   airflow_admin_pass = ""
   airflow_dags_bucket = ""
+  aiflow_scripts  = ""
 
   private_ip      = var.ip_addresses[0]
 
@@ -77,6 +75,7 @@ module "ec2-airflow" {
   airflow_admin_user = var.airflow_admin_user
   airflow_admin_pass = var.airflow_admin_pass
   airflow_dags_bucket = module.code_bucket.bucket_name
+  aiflow_scripts  = "sudo -u airflow aws s3 sync s3://${module.code_bucket.bucket_name}/dags/ /home/airflow/airflow/dags --delete"
 
   private_ip      = var.ip_addresses[1]
 
@@ -254,19 +253,3 @@ module "network" {
   environment = var.environment
   region      = var.aws_region
 }
-
-# module "ec2_instance" {
-#   source  = "git::https://github.com/terraform-aws-modules/terraform-aws-ec2-instance.git?ref=v5.8.0"
-
-#   name = "single-instance"
-
-#   instance_type = "t2.micro"
-#   key_name      = "demo-key"
-#   monitoring    = true
-#   subnet_id     = "subnet-0b03f4786e476b378"
-
-#   tags = {
-#     Terraform   = "true"
-#     Environment = "dev"
-#   }
-# }
