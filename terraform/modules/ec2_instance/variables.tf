@@ -67,7 +67,13 @@ variable airflow_dags_bucket {
   type        = string
 }
 
-variable aiflow_scripts {
+variable airflow_scripts {
   description = "Scripts to be executed on the instance"
   type        = string
+}
+
+variable "ssh_private_key" {
+  description = "SSH private key for EC2 instance access"
+  type        = string
+  sensitive   = true  # Marks as sensitive to hide in logs
 }

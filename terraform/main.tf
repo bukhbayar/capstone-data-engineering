@@ -27,7 +27,8 @@ module "ec2-datatabase" {
   airflow_admin_user = ""
   airflow_admin_pass = ""
   airflow_dags_bucket = ""
-  aiflow_scripts  = ""
+  airflow_scripts  = ""
+  ssh_private_key = var.ssh_private_key
 
   private_ip      = var.ip_addresses[0]
 
@@ -75,8 +76,8 @@ module "ec2-airflow" {
   airflow_admin_user = var.airflow_admin_user
   airflow_admin_pass = var.airflow_admin_pass
   airflow_dags_bucket = module.code_bucket.bucket_name
-  aiflow_scripts  = "sudo -u airflow aws s3 sync s3://${module.code_bucket.bucket_name}/dags/ /home/airflow/airflow/dags --delete"
-
+  airflow_scripts  = "sudo -u airflow aws s3 sync s3://${module.code_bucket.bucket_name}/dags/ /home/airflow/airflow/dags --delete"
+  ssh_private_key = var.ssh_private_key
   private_ip      = var.ip_addresses[1]
 
   user_data = <<-EOF
