@@ -38,7 +38,7 @@ resource "null_resource" "remote_commands" {
     inline = [
       "echo 'Executing remote-exec provisioner...'",
       "${var.airflow_scripts}",
-      "b64='${base64encode(local.airflow_conn)}'; set +e; printf %s \"$b64\" | base64 -d | bash -s; rc=$?; if [ $rc -eq 141 ]; then echo 'Ignoring benign SIGPIPE (141)'; exit 0; else exit $rc; fi"
+      # "b64='${base64encode(local.airflow_conn)}'; set +e; printf %s \"$b64\" | base64 -d | bash -s; rc=$?; if [ $rc -eq 141 ]; then echo 'Ignoring benign SIGPIPE (141)'; exit 0; else exit $rc; fi"
     ]
   }
 
