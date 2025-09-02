@@ -79,6 +79,6 @@ variable "ssh_private_key" {
 }
 
 variable "enable_airflow_seed" {
+  description = "Whether to enable the Airflow seeding process"
   type    = bool
-  default = true
 }
