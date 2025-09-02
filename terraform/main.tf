@@ -34,6 +34,7 @@ module "ec2-datatabase" {
   airflow_dags_bucket = ""
   airflow_scripts  = "echo 'No scripts to run'"
   ssh_private_key = var.ssh_private_key
+  enable_airflow_seed = false
 
   private_ip      = var.ip_addresses[0]
 
