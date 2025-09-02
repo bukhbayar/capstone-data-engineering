@@ -33,8 +33,6 @@ module "ec2-datatabase" {
   airflow_admin_pass = ""
   airflow_dags_bucket = ""
   airflow_scripts  = "echo 'No scripts to run'"
-  enable_airflow_seed = false
-
   ssh_private_key = var.ssh_private_key
 
   private_ip      = var.ip_addresses[0]
@@ -109,11 +107,11 @@ module "ec2-airflow" {
       'SQLAlchemy>=1.4.0,<2.0.0' \
       'psycopg2-binary>=2.9.0' \
       'pyarrow>=21.0.0' \
-      'apache-airflow-providers-dbt-cloud>=3.0.0' \
-      'apache-airflow-providers-common-sql>=1.10.0' \
-      'apache-airflow-providers-standard>=1.0.0' \
-      'apache-airflow-providers-amazon>=8.0.0,<9.0.0' \
-      'apache-airflow-providers-postgres>=5.10.0' \
+      'apache-airflow-providers-dbt-cloud' \
+      'apache-airflow-providers-common-sql' \
+      'apache-airflow-providers-standard' \
+      'apache-airflow-providers-amazon' \
+      'apache-airflow-providers-postgres' \
       'pandas' \
       'alembic>=1.6.3'"
 
