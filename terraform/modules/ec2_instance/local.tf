@@ -19,10 +19,18 @@ locals {
     AIRFLOW_CMD="set -a; [ -f /etc/airflow/airflow.env ] && source /etc/airflow/airflow.env; set +a; source ~/venv/bin/activate; airflow"
 
     # Check if the connection exists
-    yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections delete postgres_default || true"
+    if sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections get postgres_default >/dev/null 2>&1"; then
+      echo "[conn:postgres_default] exists"
+      yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections delete postgres_default"
 
-    echo "[conn:postgres_default] creating"
-    yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
+      echo "[conn:postgres_default] creating"
+      yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
+    else
+      echo "[conn:postgres_default] creating"
+      yes | sudo -n -iu airflow bash -lc "$AIRFLOW_CMD connections add postgres_default --conn-uri \"$PG_URI\" --conn-description 'Postgres on EC2 - bootcamp_db'"
+    fi
+
+
 
     echo "Airflow connections ensured."
   EOF
