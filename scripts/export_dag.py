@@ -1,4 +1,3 @@
-# dags/export_pg_to_s3_parquet.py
 from __future__ import annotations
 import os, io, tempfile
 from datetime import datetime
@@ -32,7 +31,31 @@ def _export_one_table(table: str, ds: str):
         for df in pd.read_sql(sql, conn, chunksize=CHUNK_ROWS):
             if df.empty:
                 continue
-            table_pa = pa.Table.from_pandas(df, preserve_index=False)
+
+            if table == "customers":
+                schema_pa = pa.schema([
+                    pa.field('customer_code', pa.string()),
+                    pa.field('first_name', pa.string()),
+                    pa.field('full_name', pa.string()),
+                    pa.field('id_number', pa.string()),
+                    pa.field('date_of_birth', pa.string()),
+                    pa.field('gender', pa.string()),
+                    pa.field('email', pa.string()),
+                    pa.field('phone_number', pa.string()),
+                    pa.field('province', pa.string()),
+                    pa.field('city', pa.string()),
+                    pa.field('postal_code', pa.string()),
+                    pa.field('income_bracket', pa.string()),
+                    pa.field('employment_status', pa.string()),
+                    pa.field('credit_score', pa.string()),
+                    pa.field('primary_bank', pa.string()),
+                    pa.field('primary_branch', pa.string())
+                ])
+
+                table_pa = pa.Table.from_pandas(df, preserve_index=False, schema=schema_pa)
+            else:
+                table_pa = pa.Table.from_pandas(df, preserve_index=False)
+
             # write to memory (fast) and upload
             buf = io.BytesIO()
             pq.write_table(table_pa, buf, compression="snappy")
@@ -56,6 +79,7 @@ def _export_one_table(table: str, ds: str):
     default_args={"owner": "data-eng", "retries": 1},
     tags=["export","postgres","s3","parquet","lake"],
 )
+
 def export_postgres_to_s3_raw_parquet():
     @task
     def export_table(table: str, ds: str | None = None):  # Changed this line
