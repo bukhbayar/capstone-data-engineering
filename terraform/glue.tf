@@ -71,7 +71,7 @@ resource "aws_glue_catalog_table" "raw_customers" {
     }
     columns {
       name = "id_number"
-      type = "integer"
+      type = "string"
     }
     columns {
       name = "date_of_birth"
