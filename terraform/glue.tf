@@ -46,7 +46,7 @@ resource "aws_glue_catalog_table" "raw_customers" {
   }
 
   storage_descriptor {
-    location      = "${local.raw_uri}/customers/"
+    location      = "${local.raw_uri}customers/"
     input_format  = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat"
     output_format = "org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat"
     number_of_buckets = -1
@@ -115,10 +115,6 @@ resource "aws_glue_catalog_table" "raw_customers" {
       }
     columns {
       name = "primary_branch"
-      type = "string"
-      }
-    columns {
-      name = "load_date"
       type = "string"
       }
   }
