@@ -36,7 +36,7 @@ def _export_one_table(table: str, ds: str):
                 schema_pa = pa.schema([
                     pa.field('customer_code', pa.string()),
                     pa.field('first_name', pa.string()),
-                    pa.field('full_name', pa.string()),
+                    pa.field('last_name', pa.string()),
                     pa.field('id_number', pa.string()),
                     pa.field('date_of_birth', pa.string()),
                     pa.field('gender', pa.string()),
