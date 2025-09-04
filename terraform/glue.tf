@@ -71,7 +71,7 @@ resource "aws_glue_catalog_table" "raw_customers" {
     }
     columns {
       name = "id_number"
-      type = "double"
+      type = "string"
     }
     columns {
       name = "date_of_birth"
@@ -87,7 +87,7 @@ resource "aws_glue_catalog_table" "raw_customers" {
       }
     columns {
       name = "phone_number"
-      type = "double"
+      type = "string"
       }
     columns {
       name = "province"
@@ -111,7 +111,7 @@ resource "aws_glue_catalog_table" "raw_customers" {
       }
     columns {
       name = "credit_score"
-      type = "double"
+      type = "string"
       }
     columns {
       name = "primary_bank"
