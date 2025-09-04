@@ -34,6 +34,11 @@ def _export_one_table(table: str, ds: str):
                 continue
 
             if table == "customers":
+                df['id_number'] = df['id_number'].astype(str)
+                df['phone_number'] = df['phone_number'].astype(str)
+                df['postal_code'] = df['postal_code'].astype(str)
+                df['credit_score'] = df['credit_score'].astype(str)
+
                 schema_pa = pa.schema([
                     pa.field('customer_code', pa.string()),
                     pa.field('first_name', pa.string()),
