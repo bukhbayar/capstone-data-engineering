@@ -1,4 +1,4 @@
-lake:
+dbt:
   target: dev
   outputs:
     dev:
