@@ -2,7 +2,7 @@
 version: 2
 
 models:
-  - name: customers
+  - name: raw_customers
     description: "customers with full name and email"
     columns:
       - name: customer_code
