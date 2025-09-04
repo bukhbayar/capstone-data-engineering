@@ -8,7 +8,7 @@ import pyarrow.parquet as pq
 from airflow.decorators import dag, task
 from airflow.models import Variable
 from airflow.providers.postgres.hooks.postgres import PostgresHook
-from airflow.decorators import get_current_context
+from airflow.operators.python import get_current_context
 
 # --- Config (edit or set as Airflow Variables) ---
 POSTGRES_CONN_ID = Variable.get("PG_CONN_ID", default_var="postgres_default")
