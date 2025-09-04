@@ -2,11 +2,11 @@
 # Name your project! Project names should contain only lowercase characters
 # and underscores. A good package name should reflect your organization's
 # name or the intended use of these models
-name: 'dbt_demo2'
+name: 'dbt'
 version: '1.0.0'
 
 # This setting configures which "profile" dbt uses for this project.
-profile: 'dbt_demo2'
+profile: 'dbt'
 vars:
   load_date: "2024-01-01"
 
@@ -32,16 +32,8 @@ clean-targets:         # directories to be removed by `dbt clean`
 # directory as views. These settings can be overridden in the individual model
 # files using the `{{ config(...) }}` macro.
 models:
-  dbt_demo2:
-    staging:
+  dbt:
+    raw:
       +materialized: table
-      +schema: staging
-      +tags: staging
-    warehouse:
-      +materialized: table
-      +schema: warehouse
-      +tags: warehouse
-    mart:
-      +materialized: table
-      +schema: mart
-      +tags: mart
+      +schema: raw
+      +tags: raw

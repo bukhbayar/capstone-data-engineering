@@ -1,12 +1,12 @@
-dbt_demo2:
+lake:
+  target: dev
   outputs:
     dev:
-      dbname: bootcamp_db
-      host: 10.20.1.50
-      pass: bootcamp_password
-      port: 5432
-      schema: public
+      type: athena
+      region_name: ap-southeast-2
+      work_group: primary
+      database: raw
+      schema: raw
+      s3_staging_dir: s3://de-bootcamp25/
+      s3_data_dir:    s3://data-lake-dev-buku/raw/
       threads: 5
-      type: postgres
-      user: bootcamp_user
-  target: dev
