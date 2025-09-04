@@ -1,6 +1,6 @@
 environment   = "dev"
 project       = "data-lake"
-instance_type = "t3.medium"
+instance_type = "t3.large"
 bucket_name   = "buku"
 aws_region    = "ap-southeast-2"
 airflow_admin_user = "buku"
