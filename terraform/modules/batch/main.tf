@@ -1,5 +1,5 @@
 # Interface endpoints
-locals { ifaces = ["ecr.api","ecr.dkr","logs","sts", "glue"] }
+locals { ifaces = ["ecr.api","ecr.dkr","logs","sts","glue","athena"] }
 resource "aws_vpc_endpoint" "ifaces" {
   for_each            = toset([for s in local.ifaces : "com.amazonaws.${var.aws_region}.${s}"])
   vpc_id              = var.vpc_id
