@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: raw
+    database: AwsDataCatalog
+    schema: raw
+    tables:
+      - name: customers
+        description: "Source table containing customer data"
+        columns:
+          - name: customer_code
+            description: "The primary key for this table"
+          - name: first_name
+            description: "First name of the customer"
+          - name: last_name
+            description: "Last name of the customer"
+          - name: email
+            description: "Email address of the customer"
