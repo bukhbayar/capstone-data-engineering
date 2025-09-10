@@ -28,4 +28,6 @@ locals {
 
   clean_uri = "s3://${module.data_bucket.bucket_name}/clean/"
   raw_uri = "s3://${module.data_bucket.bucket_name}/raw/"
+  warehouse_uri = "s3://${module.data_bucket.bucket_name}/warehouse/"
+  mart_uri = "s3://${module.data_bucket.bucket_name}/mart/"
 }
