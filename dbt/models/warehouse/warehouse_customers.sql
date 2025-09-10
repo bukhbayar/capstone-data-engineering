@@ -34,6 +34,7 @@ SELECT
     first_name,
     last_name,
     full_name,
+    id_number,
     date_of_birth,
     gender,
     email,
