@@ -24,8 +24,7 @@ WITH customers AS (
         employment_status,
         credit_score,
         primary_bank,
-        primary_branch,
-        load_date
+        primary_branch
     FROM
         {{ ref('customers') }}
 )
@@ -46,6 +45,5 @@ SELECT
     employment_status,
     credit_score,
     primary_bank,
-    primary_branch,
-    load_date
+    primary_branch
 FROM customers c
