@@ -16,3 +16,7 @@ sources:
             description: "Last name of the customer"
           - name: email
             description: "Email address of the customer"
+      - name: accounts
+        description: "Source table containing accounts data"
+      - name: transactions
+        description: "Source table containing transactions data"

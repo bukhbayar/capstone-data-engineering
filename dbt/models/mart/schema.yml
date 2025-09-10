@@ -1,0 +1,16 @@
+
+version: 2
+
+models:
+  - name: mart_customers
+    description: "customers with full name and email"
+    columns:
+      - name: customer_code
+        description: "The primary key for this table"
+        data_tests:
+          - unique
+          - not_null
+      - name: full_name
+        description: "CONTACT from first and last name"
+      - name: email
+        description: "Email address of the customer"

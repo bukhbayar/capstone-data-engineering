@@ -33,11 +33,15 @@ clean-targets:         # directories to be removed by `dbt clean`
 # files using the `{{ config(...) }}` macro.
 models:
   dbt_lake:
-    raw:
-      +materialized: table
-      +schema: raw
-      +tags: raw
     clean:
       +materialized: table
       +schema: clean
       +tags: clean
+    warehouse:
+      +materialized: table
+      +schema: warehouse
+      +tags: warehouse
+    mart:
+      +materialized: table
+      +schema: mart
+      +tags: mart
