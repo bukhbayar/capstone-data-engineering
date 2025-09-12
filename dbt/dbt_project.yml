@@ -41,7 +41,11 @@ models:
       +materialized: table
       +schema: warehouse
       +tags: warehouse
+      +table_type: iceberg
+      +file_format: parquet
     mart:
       +materialized: table
       +schema: mart
       +tags: mart
+      +table_type: iceberg
+      +file_format: parquet
