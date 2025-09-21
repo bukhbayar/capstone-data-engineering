@@ -46,6 +46,38 @@ resource "aws_lambda_function" "api_reader" {
 
   environment {
     variables = {
+      variables = {
+        MAX_VIDEOS     = "5"
+        MAX_COMMENTS   = "10"
+        YT_QUERY       = "data engineering"
+        SECRET_NAME = local.yt_api_key
+        OUTPUT_BUCKET = module.data_bucket.bucket_name
+      }
     }
   }
+}
+
+resource "aws_iam_role_policy" "lambda_secrets" {
+  role = aws_iam_role.lambda_exec.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect: "Allow",
+      Action: ["secretsmanager:GetSecretValue"],
+      Resource: data.aws_secretsmanager_secret.yt.arn
+    }]
+  })
+}
+
+
+resource "aws_iam_role_policy" "s3_access" {
+  role = aws_iam_role.lambda_exec.id
+  policy = jsonencode({
+    Version = "2012-10-17",
+    Statement = [{
+      Effect: "Allow",
+      Action: ["s3:*"],
+      Resource: "*"
+    }]
+  })
 }

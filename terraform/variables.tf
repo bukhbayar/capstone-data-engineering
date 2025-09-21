@@ -102,3 +102,9 @@ variable deploy_dags {
   description = "Flag to deploy DAGs to the Airflow instance"
   type        = bool
 }
+
+variable yt_api_key {
+  description = "YouTube Data API v3 key"
+  type        = string
+  sensitive   = true
+}
