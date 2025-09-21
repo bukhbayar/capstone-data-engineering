@@ -62,7 +62,7 @@ resource "aws_iam_role_policy" "lambda_secrets" {
     Statement = [{
       Effect: "Allow",
       Action: ["secretsmanager:GetSecretValue"],
-      Resource: data.aws_secretsmanager_secret.yt.arn
+      Resource: [aws_secretsmanager_secret.youtube_secret.arn]
     }]
   })
 }
