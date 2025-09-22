@@ -39,12 +39,23 @@ def search_videos(api_key: str, query: str, max_results: int = 5) -> list[dict]:
     )
     vids = []
     for it in data.get("items", []):
-        vids.append({
-            "video_id": it["id"]["videoId"],
-            "title": it["snippet"]["title"],
-            "channelTitle": it["snippet"]["channelTitle"],
-            "publishedAt": it["snippet"]["publishedAt"],
-        })
+        try:
+            # Add defensive programming
+            if "id" not in it or "videoId" not in it["id"]:
+                print(f"Skipping item without videoId: {json.dumps(it)}")
+                continue
+
+            vids.append({
+                "video_id": it["id"]["videoId"],
+                "title": it.get("snippet", {}).get("title", ""),
+                "channelTitle": it.get("snippet", {}).get("channelTitle", ""),
+                "publishedAt": it.get("snippet", {}).get("publishedAt", ""),
+            })
+        except Exception as e:
+            print(f"Error processing video item: {str(e)}")
+            print(f"Problem item: {json.dumps(it)}")
+            continue
+
     return vids
 
 def get_video_stats(api_key: str, video_ids: list[str]) -> dict[str, dict]:
